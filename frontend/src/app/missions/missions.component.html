@@ -1,0 +1,275 @@
+<div class="missions-container">
+  <div class="header">
+    <h2>🎯 Mission Control</h2>
+    <button class="btn btn-primary" (click)="toggleCreateForm()">
+      <span *ngIf="!showCreateForm">+ Create Mission</span>
+      <span *ngIf="showCreateForm">✕ Cancel</span>
+    </button>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button (click)="error = null" class="close-error">✕</button>
+  </div>
+
+  <!-- Create Mission Form -->
+  <div *ngIf="showCreateForm" class="create-form">
+    <h3>Create New Mission</h3>
+    <form (ngSubmit)="createMission()">
+      <div class="form-group">
+        <label for="missionName">Mission Name:</label>
+        <input
+          id="missionName"
+          name="missionName"
+          type="text"
+          [(ngModel)]="newMission.name"
+          placeholder="Enter mission name"
+          maxlength="100"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="missionDescription">Description:</label>
+        <textarea
+          id="missionDescription"
+          name="missionDescription"
+          [(ngModel)]="newMission.description"
+          placeholder="Enter mission description"
+          maxlength="500"
+          rows="4"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Targets Section -->
+      <div class="form-group">
+        <h4>Targets (Required - Min 1, Max 3) <span class="required">*</span></h4>
+        <p class="validation-hint">Every mission must have at least one target.</p>
+        
+        <!-- Existing targets -->
+        <div *ngIf="newMission.targets && newMission.targets.length > 0" class="targets-list">
+          <div *ngFor="let target of newMission.targets; let i = index" class="target-item">
+            <span class="target-info">{{ target.name }} ({{ target.country }})</span>
+            <button type="button" class="btn btn-danger btn-sm" (click)="removeTarget(i)">Remove</button>
+          </div>
+        </div>
+
+        <!-- Add new target -->
+        <div class="target-form" *ngIf="(newMission.targets?.length || 0) < 3">
+          <div class="target-inputs">
+            <input
+              type="text"
+              name="targetName"
+              [(ngModel)]="targetName"
+              placeholder="Target name"
+              maxlength="100"
+            />
+            <input
+              type="text"
+              name="targetCountry"
+              [(ngModel)]="targetCountry"
+              placeholder="Country"
+              maxlength="100"
+            />
+            <button type="button" class="btn btn-success btn-sm" (click)="addTarget()" [disabled]="!canAddTarget()">
+              Add Target
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <!-- Validation messages -->
+        <div *ngIf="!isFormValid() && !loading" class="validation-messages">
+          <p *ngIf="!newMission.name?.trim()" class="validation-error">• Mission name is required</p>
+          <p *ngIf="!newMission.description?.trim()" class="validation-error">• Mission description is required</p>
+          <p *ngIf="!newMission.targets || newMission.targets.length === 0" class="validation-error">• At least one target is required</p>
+          <p *ngIf="newMission.targets && newMission.targets.length > 3" class="validation-error">• Maximum 3 targets allowed</p>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" [disabled]="!isFormValid() || loading">
+          <span *ngIf="loading">Creating...</span>
+          <span *ngIf="!loading">Create Mission</span>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="toggleCreateForm()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading && !showCreateForm" class="loading">
+    <div class="spinner"></div>
+    <p>Loading missions...</p>
+  </div>
+
+  <!-- Missions List -->
+  <div *ngIf="!loading || showCreateForm" class="missions-grid">
+    <div *ngIf="missions.length === 0" class="no-missions">
+      <p>🔍 No missions found. Create your first mission to get started!</p>
+    </div>
+
+    <div *ngFor="let mission of missions" class="mission-card">
+      <div class="mission-header">
+        <h3>{{ mission.name }}</h3>
+        <div class="mission-status" [class]="getStatusClass(mission)">
+          {{ getMissionStatus(mission) }}
+        </div>
+      </div>
+
+      <div class="mission-content">
+        <p class="mission-description">{{ mission.description }}</p>
+        
+        <div class="mission-dates">
+          <div class="date-info">
+            <span class="date-label">Start:</span>
+            <span class="date-value">{{ formatDate(mission.start_date) }}</span>
+          </div>
+          <div class="date-info">
+            <span class="date-label">End:</span>
+            <span class="date-value">{{ formatDate(mission.end_date) }}</span>
+          </div>
+          <div *ngIf="mission.is_completed && mission.completed_at" class="date-info">
+            <span class="date-label">✅ Completed:</span>
+            <span class="date-value">{{ formatDate(mission.completed_at) }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="mission.cat" class="assigned-cat">
+          <span class="cat-label">🐱 Assigned Agent:</span>
+          <span class="cat-name">{{ mission.cat.name }}</span>
+        </div>
+        
+        <div *ngIf="!mission.cat" class="no-assignment">
+          <span class="no-cat">⚠️ No agent assigned</span>
+        </div>
+
+        <div *ngIf="mission.targets && mission.targets.length > 0" class="mission-targets">
+          <span class="targets-label">🎯 Targets:</span>
+          <div class="targets-list">
+            <div *ngFor="let target of mission.targets" class="target-item">
+              <span class="target-name">{{ target.name }}</span>
+              <span class="target-country">({{ target.country }})</span>
+              <span class="target-status" [class]="'status-' + target.status">{{ target.status }}</span>
+              <button 
+                *ngIf="target.notes" 
+                class="btn btn-info btn-xs notes-button"
+                (click)="toggleNotes(target.id!)"
+                title="View notes">
+                📝
+              </button>
+              <button 
+                *ngIf="canDeleteTarget(target)" 
+                class="btn btn-danger btn-xs"
+                (click)="deleteTargetFromMission(mission.id!, target.id!, target)"
+                [disabled]="loading"
+                title="Delete target (only available for 'init' status)">
+                🗑️
+              </button>
+              <!-- Notes popup -->
+              <div *ngIf="showNotes[target.id!]" class="notes-popup">
+                <div class="notes-content">
+                  <div class="notes-header">
+                    <strong>📝 Target Notes</strong>
+                    <button class="close-notes" (click)="toggleNotes(target.id!)">✕</button>
+                  </div>
+                  <div class="notes-body">
+                    {{ target.notes || 'No notes available' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Management Section -->
+        <div class="target-management">
+          <button 
+            *ngIf="canAddTargetToMission(mission) && !mission.is_completed"
+            class="btn btn-info btn-sm" 
+            (click)="toggleTargetManagement(mission.id!)"
+            [disabled]="loading">
+            {{ showTargetManagement[mission.id!] ? '➖ Cancel' : '➕ Add Target' }}
+          </button>
+
+          <!-- Add Target Form -->
+          <div *ngIf="showTargetManagement[mission.id!]" class="add-target-form">
+            <div class="target-inputs">
+              <input
+                type="text"
+                [(ngModel)]="newTargetData[mission.id!].name"
+                placeholder="Target name"
+                maxlength="100"
+                class="input-sm"
+              />
+              <input
+                type="text"
+                [(ngModel)]="newTargetData[mission.id!].country"
+                placeholder="Country"
+                maxlength="100"
+                class="input-sm"
+              />
+              <button 
+                class="btn btn-success btn-sm" 
+                (click)="addTargetToExistingMission(mission.id!)"
+                [disabled]="!isValidTargetData(mission.id!) || loading">
+                ✅ Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mission-actions">
+        <button 
+          *ngIf="!mission.cat" 
+          class="btn btn-success" 
+          (click)="openAssignDialog(mission)" 
+          [disabled]="loading">
+          🕵️ Assign Spy
+        </button>
+        <button 
+          class="btn btn-danger" 
+          (click)="deleteMission(mission)" 
+          [disabled]="loading || mission.cat"
+          [title]="mission.cat ? 'Cannot delete mission with assigned agent' : 'Delete mission'">
+          🗑️ Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assignment Dialog -->
+  <div *ngIf="showAssignDialog" class="modal-overlay">
+    <div class="assign-dialog">
+      <h3>🕵️ Assign Spy to Mission</h3>
+      <p><strong>Mission:</strong> {{ selectedMission?.name }}</p>
+      
+      <div class="cat-selection">
+        <label for="catSelect">Select Available Agent:</label>
+        <select id="catSelect" [(ngModel)]="selectedCatId" class="cat-select">
+          <option value="">-- Choose a Spy Cat --</option>
+          <option *ngFor="let cat of freeCats" [value]="cat.id">
+            🐱 {{ cat.name }} ({{ cat.breed }}) - {{ cat.years_of_experience }} years
+          </option>
+        </select>
+      </div>
+      
+      <div class="dialog-actions">
+        <button 
+          class="btn btn-primary" 
+          (click)="assignCat()" 
+          [disabled]="!selectedCatId || loading">
+          ✅ Assign Agent
+        </button>
+        <button 
+          class="btn btn-secondary" 
+          (click)="closeAssignDialog()">
+          ❌ Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

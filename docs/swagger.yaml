@@ -1,0 +1,820 @@
+basePath: /
+definitions:
+  dto.AddTargetRequest:
+    properties:
+      country:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      notes:
+        type: string
+    required:
+    - country
+    - name
+    type: object
+  dto.CatListResponse:
+    properties:
+      breeds:
+        items:
+          type: string
+        type: array
+      cats:
+        items:
+          $ref: '#/definitions/dto.CatResponse'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  dto.CatResponse:
+    properties:
+      breed:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      mission_id:
+        type: integer
+      name:
+        type: string
+      salary:
+        type: number
+      updated_at:
+        type: string
+      years_of_experience:
+        type: integer
+    type: object
+  dto.CreateCatRequest:
+    properties:
+      breed:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      salary:
+        minimum: 0
+        type: number
+      years_of_experience:
+        minimum: 0
+        type: integer
+    required:
+    - breed
+    - name
+    - salary
+    - years_of_experience
+    type: object
+  dto.CreateMissionRequest:
+    properties:
+      description:
+        maxLength: 500
+        minLength: 1
+        type: string
+      end_date:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      start_date:
+        type: string
+      targets:
+        items:
+          $ref: '#/definitions/dto.CreateTargetRequest'
+        maxItems: 3
+        minItems: 1
+        type: array
+    required:
+    - description
+    - name
+    - targets
+    type: object
+  dto.CreateTargetRequest:
+    properties:
+      country:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - country
+    - name
+    type: object
+  dto.MissionResponse:
+    properties:
+      cat:
+        $ref: '#/definitions/dto.CatResponse'
+      cat_id:
+        type: integer
+      completed_at:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      is_completed:
+        type: boolean
+      name:
+        type: string
+      start_date:
+        type: string
+      targets:
+        items:
+          $ref: '#/definitions/dto.TargetResponse'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  dto.TargetResponse:
+    properties:
+      country:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      mission_id:
+        type: integer
+      name:
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.UpdateCatSalaryRequest:
+    properties:
+      salary:
+        minimum: 0
+        type: number
+    required:
+    - salary
+    type: object
+  dto.UpdateTargetRequest:
+    properties:
+      country:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      notes:
+        type: string
+      status:
+        enum:
+        - init
+        - in_progress
+        - completed
+        type: string
+    type: object
+host: localhost:3001
+info:
+  contact: {}
+  description: A simple API for managing spy cats, missions, and targets
+  title: Spy Cat Agency API
+  version: "1.0"
+paths:
+  /api/v1/agency/missions:
+    get:
+      description: Get all spy missions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.MissionResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List all missions
+      tags:
+      - missions
+    post:
+      consumes:
+      - application/json
+      description: Create a new spy mission
+      parameters:
+      - description: Mission data
+        in: body
+        name: mission
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateMissionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.MissionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new mission
+      tags:
+      - missions
+  /api/v1/agency/missions/{id}:
+    delete:
+      description: Delete a spy mission by its ID
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete mission
+      tags:
+      - missions
+    get:
+      description: Get a specific spy mission by its ID
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MissionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get mission by ID
+      tags:
+      - missions
+  /api/v1/agency/missions/{missionId}/targets:
+    post:
+      consumes:
+      - application/json
+      description: Add a new target to an existing mission (up to 3 targets total)
+      parameters:
+      - description: Mission ID
+        in: path
+        name: missionId
+        required: true
+        type: integer
+      - description: Add target request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddTargetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TargetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add a target to a mission
+      tags:
+      - targets
+  /api/v1/agency/missions/{missionId}/targets/{targetId}:
+    delete:
+      description: Delete a target from a mission (only if status is not 'init')
+      parameters:
+      - description: Mission ID
+        in: path
+        name: missionId
+        required: true
+        type: integer
+      - description: Target ID
+        in: path
+        name: targetId
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Target deleted successfully
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a target from a mission
+      tags:
+      - targets
+    put:
+      consumes:
+      - application/json
+      description: Update target information
+      parameters:
+      - description: Mission ID
+        in: path
+        name: missionId
+        required: true
+        type: integer
+      - description: Target ID
+        in: path
+        name: targetId
+        required: true
+        type: integer
+      - description: Update target request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTargetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TargetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a target
+      tags:
+      - targets
+  /api/v1/cats:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of spy cats
+      parameters:
+      - default: 10
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CatListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List spy cats
+      tags:
+      - cats
+    post:
+      consumes:
+      - application/json
+      description: Create a new spy cat with the provided information
+      parameters:
+      - description: Cat creation request
+        in: body
+        name: cat
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCatRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new spy cat
+      tags:
+      - cats
+  /api/v1/cats/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a spy cat by its ID
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a spy cat
+      tags:
+      - cats
+    get:
+      consumes:
+      - application/json
+      description: Get a spy cat by its ID
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a spy cat by ID
+      tags:
+      - cats
+  /api/v1/cats/{id}/salary:
+    put:
+      consumes:
+      - application/json
+      description: Update the salary of a spy cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Salary update request
+        in: body
+        name: salary
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCatSalaryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update spy cat salary
+      tags:
+      - cats
+  /api/v1/cats/breeds:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of valid cat breeds for cat creation
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get valid cat breeds
+      tags:
+      - cats
+  /api/v1/spy-cats/{catId}/mission:
+    get:
+      description: Get the current mission assigned to a specific cat with all targets
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MissionResponse'
+        "204":
+          description: Cat has no assigned mission
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get cat's current mission
+      tags:
+      - spy-cats
+  /api/v1/spy-cats/{catId}/mission/targets/{targetId}/notes:
+    put:
+      consumes:
+      - application/json
+      description: Update the notes of a target (only by assigned cat)
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catId
+        required: true
+        type: integer
+      - description: Target ID
+        in: path
+        name: targetId
+        required: true
+        type: integer
+      - description: Notes update request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TargetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update target notes
+      tags:
+      - spy-cats
+  /api/v1/spy-cats/{catId}/mission/targets/{targetId}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update the status of a target (only by assigned cat)
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catId
+        required: true
+        type: integer
+      - description: Target ID
+        in: path
+        name: targetId
+        required: true
+        type: integer
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TargetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update target status
+      tags:
+      - spy-cats
+  /missions/{id}/assign:
+    post:
+      consumes:
+      - application/json
+      description: Assign a spy cat to a mission and set start date
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Cat assignment data
+        in: body
+        name: cat_id
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MissionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Assign a cat to a mission
+      tags:
+      - missions
+  /missions/free-cats:
+    get:
+      description: Get all cats that are available for assignment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.CatResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get free cats
+      tags:
+      - cats
+swagger: "2.0"

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: spy_cats
+      POSTGRES_USER: spy_user
+      POSTGRES_PASSWORD: spy_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres  # Override for Docker network
+      PORT: 3001         # Override for new port
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: spy-cat-frontend
+    ports:
+      - "4300:80"
+    depends_on:
+      - app
+
+volumes:
+  postgres_data:

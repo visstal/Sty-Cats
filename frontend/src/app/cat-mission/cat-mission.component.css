@@ -1,0 +1,464 @@
+/* Cat Mission Component Styling */
+.cat-mission-container {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  color: #e0e6ed;
+  font-family: 'Courier New', monospace;
+}
+
+/* Cat Header */
+.cat-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cat-header h2 {
+  color: #00d4aa;
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 0 0 15px rgba(0, 212, 170, 0.5);
+  margin-bottom: 1rem;
+}
+
+.cat-info {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.cat-detail {
+  background: rgba(0, 212, 170, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 212, 170, 0.3);
+  font-size: 0.9rem;
+}
+
+/* Loading and Error States */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 212, 170, 0.3);
+  border-left: 4px solid #00d4aa;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.spinner-sm {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 212, 170, 0.3);
+  border-left: 2px solid #00d4aa;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  color: #ff6b7d;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-error {
+  background: none;
+  border: none;
+  color: #ff6b7d;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 1rem;
+}
+
+/* No Mission State */
+.no-mission {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.no-mission-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 193, 7, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.no-mission-card h3 {
+  color: #ffc107;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Mission Completed State */
+.mission-completed {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.completed-card {
+  background: rgba(40, 167, 69, 0.1);
+  border: 2px solid rgba(40, 167, 69, 0.5);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.completed-card h3 {
+  color: #28a745;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.grateful-message {
+  background: rgba(40, 167, 69, 0.1);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+  margin: 1rem 0;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Active Mission State */
+.active-mission {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.mission-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(0, 212, 170, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.mission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(224, 230, 237, 0.2);
+}
+
+.mission-header h3 {
+  color: #00d4aa;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.mission-description {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: rgba(224, 230, 237, 0.9);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-badge.standby {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+}
+
+.status-badge.active {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.5);
+}
+
+.status-badge.completed {
+  background: rgba(0, 212, 170, 0.2);
+  color: #00d4aa;
+  border: 1px solid rgba(0, 212, 170, 0.5);
+}
+
+.mission-status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.mission-status.active {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.5);
+}
+
+/* Dates */
+.mission-dates {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.date-label {
+  font-size: 0.8rem;
+  color: rgba(224, 230, 237, 0.7);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.date-value {
+  color: #00d4aa;
+  font-weight: bold;
+}
+
+/* Targets Section */
+.targets-section h4 {
+  color: #00d4aa;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.target-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(224, 230, 237, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.target-card:hover {
+  border-color: rgba(0, 212, 170, 0.4);
+  transform: translateY(-2px);
+}
+
+.target-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(224, 230, 237, 0.1);
+}
+
+.target-header h5 {
+  color: #e0e6ed;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.target-country {
+  background: rgba(0, 212, 170, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  border: 1px solid rgba(0, 212, 170, 0.3);
+}
+
+/* Form Fields */
+.target-status-section,
+.target-notes-section {
+  margin-bottom: 1rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #00d4aa;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-select {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(224, 230, 237, 0.3);
+  border-radius: 6px;
+  color: #e0e6ed;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #00d4aa;
+  box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2);
+}
+
+.status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Status-specific colors for select */
+.status-select.status-init {
+  border-left: 4px solid #6c757d;
+}
+
+.status-select.status-in_progress {
+  border-left: 4px solid #ffc107;
+}
+
+.status-select.status-completed {
+  border-left: 4px solid #28a745;
+}
+
+.notes-textarea {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(224, 230, 237, 0.3);
+  border-radius: 6px;
+  color: #e0e6ed;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: #00d4aa;
+  box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2);
+}
+
+.notes-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.notes-textarea::placeholder {
+  color: rgba(224, 230, 237, 0.5);
+  font-style: italic;
+}
+
+.final-notice {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 4px;
+  color: #ff6b7d;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* Target Meta */
+.target-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(224, 230, 237, 0.1);
+  font-size: 0.8rem;
+  color: rgba(224, 230, 237, 0.7);
+}
+
+.updating-indicator {
+  display: flex;
+  align-items: center;
+  color: #00d4aa;
+  font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #00d4aa 0%, #007991 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
+  border: 2px solid #00d4aa;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #00b894 0%, #006d75 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 170, 0.5);
+}
+
+/* Status Indicator */
+.status-indicator {
+  margin: 1rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cat-mission-container {
+    padding: 1rem;
+  }
+  
+  .cat-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .mission-dates {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .target-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

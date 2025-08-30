@@ -1,0 +1,26 @@
+# Configuration
+server:
+  port: 8080
+  host: 0.0.0.0
+  read_timeout: 15s
+  write_timeout: 15s
+
+database:
+  host: localhost
+  port: 5432
+  name: spy_cats
+  user: spy_user
+  password: spy_password
+  ssl_mode: disable
+  max_open_conns: 25
+  max_idle_conns: 25
+  conn_max_lifetime: 5m
+
+external_apis:
+  cat_api:
+    base_url: https://api.thecatapi.com/v1
+    timeout: 10s
+
+logging:
+  level: info
+  format: json
